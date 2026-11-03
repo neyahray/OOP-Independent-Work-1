@@ -1,0 +1,151 @@
+import java.util.*;
+
+public class Customer {
+    private int customerId;
+    private String name;
+    private String contactInfo;
+    private double budget;
+    private List<Order> orders = new ArrayList<>();
+
+    public Customer() {}
+
+    public Customer(int customerId, String name, String contactInfo, double budget) {
+        this.customerId = customerId;
+        this.name = name;
+        this.contactInfo = contactInfo;
+        setBudget(budget);
+    }
+
+    //getters
+    public int getCustomerId() {return customerId;}
+    public String getName() {
+        return name;
+    }
+    public String getContactInfo() {
+        return contactInfo;
+    }
+    public double getBudget() {
+        return budget;
+    }
+    public List<Order> getOrders() {return Collections.unmodifiableList(orders);}
+
+    //setters
+    public void setName(String name) {
+        this.name = name;
+    }
+    public void setContactInfo(String contactInfo) {
+        this.contactInfo = contactInfo;
+    }
+    public void setBudget(double budget) {
+        if (budget >= 0) {
+            this.budget = budget;
+        } else {
+            System.out.println("Error! Budget can not be less than 0");
+        }
+    }
+
+    //methods
+    public void displayInfo() {
+        System.out.println("Customer name: " + this.name +  ", Contact Info: " + this.contactInfo + ", Budget: " + this.budget + "$");
+        System.out.println("Total orders placed: " + orders.size());
+    }
+
+    public Bouquet createBouquet(InventoryShop inventory, Scanner scanner) {
+        Bouquet bouquet = new Bouquet();
+        System.out.println("Lets create bouquet for " + this.name + "!");
+        System.out.println("Chose from our catalog: ");
+        inventory.displayFlowers();
+        System.out.println("Enter in format 'flower - quantity': ");
+        String[] pairs = scanner.nextLine().split(",");
+        for (String pair : pairs) {
+            String[] part = pair.trim().split("-");
+            if (part.length != 2) {
+                System.out.println("Error! Wrong format for '" + pair.trim() + "'. Use 'flower - quantity'");
+                continue;
+            }
+
+            String flowerName = part[0].trim();
+            Flower matchedFlower = null;
+
+            for (Flower f : inventory.getStock().keySet()) {
+                if (f.getName().trim().equalsIgnoreCase(flowerName)) {
+                    matchedFlower = f;
+                    break;
+                }
+            }
+
+            if (matchedFlower == null) {
+                System.out.println("Error: Flower '" + flowerName + "' not found in catalog!");
+                continue;
+            }
+
+            if (inventory.getQuantity(matchedFlower) == 0) {
+                System.out.println("Sorry, " + matchedFlower.getName() + " is out of stock!");
+                continue;
+            }
+
+            int quantity = 0;
+            String currentQuantityInput = part[1].trim();
+            while (true) {
+                if (currentQuantityInput.equalsIgnoreCase("skip")) {
+                    quantity = 0;
+                    break;
+                }
+
+                if (currentQuantityInput.contains("-")) {
+                    System.out.println("Error: You must enter only a positive number! Enter again a number for " + flowerName + " \n(or enter skip if you don't want to add this flower anymore) : ");
+                    currentQuantityInput = scanner.nextLine().trim();
+                    continue;
+                }
+
+
+                try {
+                    quantity = Integer.parseInt(currentQuantityInput);
+
+                    if (quantity <= 0) {
+                        System.out.println("Quantity must be greater than 0! Enter again for " + flowerName + ": ");
+                        currentQuantityInput = scanner.nextLine().trim();
+                        continue;
+                    }
+
+                    if (!inventory.checkStock(matchedFlower, quantity)) {
+                        System.out.println("Not enough in stock! Available: " + inventory.getQuantity(matchedFlower) +  " pcs for " + flowerName + ": ");
+                        currentQuantityInput = scanner.nextLine().trim();
+                        continue;
+                    }
+
+                    break;
+                } catch (NumberFormatException e) {
+                    System.out.println("Quantity must be a number! Enter again a number for " + flowerName + ": ");
+                    currentQuantityInput = scanner.nextLine().trim();
+                }
+            }
+
+            if (quantity == 0) {
+                continue;
+            }
+
+            if (!inventory.reduceStock(matchedFlower, quantity)) {
+                continue;
+            }
+
+            bouquet.addFlower(matchedFlower, quantity);
+            System.out.println("Successfully added " + quantity + " " + matchedFlower.getName() + "(s) in current bouquet!");
+        }
+        return bouquet;
+    }
+
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return customerId == customer.customerId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(customerId);
+    }
+}
