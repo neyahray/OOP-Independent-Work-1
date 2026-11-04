@@ -1,3 +1,4 @@
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -13,7 +14,7 @@ public class Bouquet {
 
     //getter
     public Map<Flower, Integer> getFlowers() {
-        return flowers;
+        return Collections.unmodifiableMap(flowers);
     }
 
     //setter

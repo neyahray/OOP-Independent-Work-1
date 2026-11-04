@@ -28,8 +28,8 @@ public abstract class Flower implements Processable, Wrappable, Comparable<Flowe
 
 
     //setters:
-    public void setName(String name) {this.name = name;}
-    public void setColor(String color) {this.color = color;}
+    void setName(String name) {this.name = name;}
+    void setColor(String color) {this.color = color;}
 
     public void setPrice(double price) {
         if (price >= 0) {
@@ -41,12 +41,10 @@ public abstract class Flower implements Processable, Wrappable, Comparable<Flowe
 
     public void setStemSize(String stemSize) {this.stemSize = stemSize;}
 
+
+    //methods
     public void displayInfo() {
         System.out.println("name: " + this.name + ", color: " +  this.color + ", stem size: " + this.stemSize + ", price: " + this.price + "$");
-    }
-
-    public boolean isFresh(int daysInStock) {
-        return daysInStock < 5;
     }
 
     public String getFlowerCategory() {

@@ -1,0 +1,6 @@
+ - lilie | pink | 3.0$ | in stock: 87
+ - peony | Orange | 5.0$ | in stock: 78
+ - pinkRose | pink | 2.5$ | in stock: 23
+ - redRose | red | 2.0$ | in stock: 20
+ - whiteRose | white | 2.2$ | in stock: 23
+ - yellowRose | yellow | 2.3$ | in stock: 32

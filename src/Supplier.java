@@ -1,16 +1,15 @@
-import java.util.Objects;
+import java.util.*;
 
 public class Supplier {
     private int supplierId;
     private String companyName;
-    private Flower flowerType;
+    private final Set<Flower> flowers = new HashSet<>();
 
     public Supplier() {}
 
-    public Supplier(int supplierId, String companyName, Flower flowerType) {
+    public Supplier(int supplierId, String companyName) {
         this.supplierId = supplierId;
         this.companyName = companyName;
-        this.flowerType = flowerType;
     }
 
     //getters
@@ -18,25 +17,44 @@ public class Supplier {
     public String getCompanyName() {
         return companyName;
     }
-    public Flower getFlowerType() {
-        return flowerType;
+    public Set<Flower> getFlowers() {
+        return Collections.unmodifiableSet(flowers);
     }
 
     //setters
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
     }
-    public void setFlowerType(Flower flowerType) {
-        this.flowerType = flowerType;
-    }
 
     //methods
     public void displayInfo() {
-        System.out.println("Supplier: " + this.companyName + ", supplies: "  + this.flowerType.getName());
+        System.out.print("Supplier: " + companyName + ", supplies: ");
+        if (flowers.isEmpty()) {
+            System.out.println("nothing yet");
+            return;
+        }
+        List<String> names = new ArrayList<>();
+        for (Flower f : flowers) {
+            names.add(f.getName());
+        }
+        Collections.sort(names);
+        System.out.println(String.join(", ", names));
     }
 
     public void supplyFlowers(Flower flower, int quantity) {
         System.out.println(flower.getName() + " is supplied by " + companyName + " on " + quantity + " pcs");
+    }
+
+    boolean addFlower(Flower flower) {
+        return flowers.add(flower);
+    }
+
+    boolean removeFlower(Flower flower) {
+        return flowers.remove(flower);
+    }
+
+    public boolean supplies(Flower flower) {
+        return flowers.contains(flower);
     }
 
     @Override

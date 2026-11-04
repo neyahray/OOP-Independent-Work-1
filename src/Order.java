@@ -13,12 +13,13 @@ public class Order implements Comparable<Order> {
         this.status = OrderStatus.PENDING;
     }
 
-    public Order(int orderId, Customer customer, Bouquet bouquet, OrderStatus status, double customerInitialBudget, Priority priority) {
+    public Order(int orderId, Customer customer, Priority priority) {
         this.orderId = orderId;
         this.customer = customer;
-        this.bouquet = bouquet;
-        this.status = status;
-        this.customerInitialBudget = customerInitialBudget;
+        //Composition: Bouquet is created in order
+        this.bouquet = new Bouquet();
+        this.status = OrderStatus.PENDING;
+        this.customerInitialBudget = customer.getBudget();
         this.priority = priority;
     }
 
@@ -32,7 +33,6 @@ public class Order implements Comparable<Order> {
 
     //setters
     public void setCustomer(Customer customer) {this.customer = customer;}
-    public void setBouquet(Bouquet bouquet) {this.bouquet = bouquet;}
     public void setStatus(OrderStatus status) {this.status = status;}
     public void setCustomerInitialBudget(double customerInitialBudget) {this.customerInitialBudget = customerInitialBudget;}
     public void setPriority(Priority priority) {this.priority = priority;}

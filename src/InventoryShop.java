@@ -2,29 +2,21 @@ import java.util.*;
 
 public class InventoryShop {
     private Map<Flower, Integer> stock = new HashMap<>();
-    private List<Supplier> suppliers = new ArrayList<>();
 
     public InventoryShop() {}
 
-    public InventoryShop(Map<Flower, Integer> stock, List<Supplier> suppliers) {
+    public InventoryShop(Map<Flower, Integer> stock) {
         this.stock = new HashMap<>(stock);
-        this.suppliers = new ArrayList<>(suppliers);
     }
 
     //getters
     public Map<Flower, Integer> getStock() {
         return Collections.unmodifiableMap(stock);
     }
-    public List<Supplier> getSuppliers() {
-        return suppliers;
-    }
 
     //setters
     public void setStock(Map<Flower, Integer> stock) {
         this.stock = new HashMap<>(stock);
-    }
-    public void setSuppliers(List<Supplier> suppliers) {
-        this.suppliers = new ArrayList<>(suppliers);
     }
 
     //methods
@@ -32,10 +24,6 @@ public class InventoryShop {
         System.out.println("Flower stock: ");
         for (Map.Entry<Flower, Integer> entry : stock.entrySet()) {
             System.out.println(entry.getKey().getName() + " - " + entry.getValue() + " pcs");
-        }
-        System.out.println("All suppliers: ");
-        for (Supplier s : suppliers) {
-            s.displayInfo();
         }
     }
 
@@ -79,7 +67,6 @@ public class InventoryShop {
             System.out.println("New flower " + flower.getName() + " is added to stock!");
             return true;
         }
-
     }
 
     public boolean reduceStock(Flower flower, int quantity) {
@@ -101,18 +88,7 @@ public class InventoryShop {
         return true;
     }
 
-    public boolean orderFromSupplier (Supplier supplier, Flower flower, int quantity) {
-        if (!supplier.getFlowerType().equals(flower)) {
-            System.out.println("Error! " + supplier.getCompanyName() + " does not supply " + flower.getName());
-            return false;
-        }
-        if (!restock(flower, quantity)) {
-            return false;
-        }
-        supplier.supplyFlowers(flower, quantity);
-        System.out.println("Stock restocked successfully!");
-        return true;
-    }
+
 
     public boolean restock(Flower flower, int quantity) {
         if (quantity <= 0) {
@@ -132,29 +108,5 @@ public class InventoryShop {
             System.out.println("Error! Flower " + flower.getName() + " not found in stock");
             return false;
         }
-    }
-
-
-    //Grouping
-    public Map<String, List<Flower>> groupFlowersByColor() {
-        Map<String, List<Flower>> groupedMap = new HashMap<>();
-        for (Flower flower : stock.keySet()) {
-            String color = flower.getColor();
-            groupedMap.putIfAbsent(color, new ArrayList<>());
-            groupedMap.get(color).add(flower);
-        }
-
-        return groupedMap;
-    }
-
-    //Filtering
-    public List<Flower> filterByType(String type) {
-        List<Flower> list = new ArrayList<>();
-        for (Flower f : stock.keySet()) {
-            if (f.getClass().getSimpleName().equalsIgnoreCase(type)) {
-                list.add(f);
-            }
-        }
-        return list;
     }
 }
